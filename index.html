@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<!-- Page title -->
+	<title>Vivek Kumar</title>
+	
+	<!-- Meta tags -->
+	<meta charset="UTF-8">
+
+	<!-- Manifest -->
+	<link rel="manifest" href="/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/favicon.ico" />
+	
+	<!-- Styling -->
+	<style>
+		.d-none {
+			display: none;
+		}
+	</style>
+
+</head>
+<body>
+
+	<!-- Add custom installation button -->
+	<div class="container pt-3 pb-3">
+		<button
+			id="install-btn"
+			class="d-none"
+		>
+			Install PWA
+		</button>
+	</div>
+	
+	<!-- Register service worker -->
+	<script>
+		navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(function (registration) {
+
+			window.addEventListener('beforeinstallprompt', (e) => {
+
+				// Prevent showing install bar on mobile
+				e.preventDefault();
+				differedPrompt = e;
+
+				// Handle install button
+				document.getElementById("install-btn").classList.remove("d-none");
+				document.getElementById("install-btn").addEventListener("click", () => {
+					differedPrompt.prompt();
+				});
+
+			});
+
+			// Hadle post-installation
+			window.addEventListener('appinstalled', (evt) => {
+				document.getElementById("install-btn").classList.add("d-none");
+			});
+
+		}).catch(function (e) {
+			//console.error('Error during service worker registration:', e);
+		});
+	</script>
+
+</body>
+</html>
